@@ -1,30 +1,28 @@
-import propTypes from 'prop-types';
-import css from './Statistics.module.css';
+import { Position, PositionBlock } from './Statistics.slyled';
+import { Name } from './Statistics.slyled';
+import PropTypes from 'prop-types';
 
-export const Statistics = ({ good, neutral, bad, total, positivePercentage }) => (
-  <ul className={css.feedbackList}>
-    <li className={css.feedbackListItem}>Good: {good}</li>
-    <li className={css.feedbackListItem}>Neutral: {neutral}</li>
-    <li className={css.feedbackListItem}>Bad: {bad}</li>
-    <li className={css.feedbackListItem}>Total: {total}</li>
-    <li className={css.feedbackListItem}>
-      Positive feedback: {positivePercentage} %
-    </li>
-  </ul>
-);
+export const Statistics = props => {
+  const { good, neutral, bad, positivePercentage, total } = props;
+  return (
+    <PositionBlock>
+      <Position>Good: {good}</Position>
+      <Position>Neutral: {neutral}</Position>
+      <Position>Bad: {bad}</Position>
+      <Position>Total: {total}</Position>
+      <Position>Positive feedback:{positivePercentage}%</Position>
+    </PositionBlock>
+  );
+};
 
-Statistics.propTypes = {
-  good: propTypes.number.isRequired,
-  neutral: propTypes.number.isRequired,
-  bad: propTypes.number.isRequired,
-  total: propTypes.number.isRequired,
-  positivePercentage: propTypes.number.isRequired,
+export const NameStatistics = () => {
+  return <Name>Statistics</Name>;
 };
 
 Statistics.propTypes = {
-  good: propTypes.number.isRequired,
-  neutral: propTypes.number.isRequired,
-  bad: propTypes.number.isRequired,
-  total: propTypes.number.isRequired,
-  positivePercentage: propTypes.number.isRequired,
+  good: PropTypes.number.isRequired,
+  neutral: PropTypes.number.isRequired,
+  bad: PropTypes.number.isRequired,
+  positivePercentage: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
 };

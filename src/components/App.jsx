@@ -1,62 +1,65 @@
-import { Component } from "react"
-import { Statistics } from "./Statistics"
-import { FeedbackOptions } from "./FeedbackOptions/FeedbackOptions"
-import { Section } from "./Section"
-import { Notification } from "./Notification"
+import React, { Component } from 'react';
+import { Statistics, NameStatistics } from 'components/Statistics/Statistics';
+import { Container } from './Default/Default.styled';
+import {
+  FeedbackOptions,
+  TitlFeedback,
+} from 'components/FeedbackOptions/FeedbackOptions';
+import { Section } from 'components/Section/Section';
+import { Massage } from './Default/DefaultMassage';
 
-const feedbackName = [
-  {id: 'good', name: 'Good'}, 
-  {id: 'neutral', name: 'Neutral'}, 
-  {id: 'bad', name: 'Bad'}]
-
-export class App extends Component {
-
+export default class App extends Component {
   state = {
     good: 0,
     neutral: 0,
-    bad: 0
-  }
-
-  handleClick = evt => {
-      const {name} = evt.target;
-      
-      this.setState(prevState => ({
-        [name]: prevState[name] + 1,
-      }));
-  }
+    bad: 0,
+  };
 
   countTotalFeedback = () => {
-    return this.state.good + this.state.neutral + this.state.bad;
-  }
-  
-  countPositiveFeedbackPercentage = () => {
-    if(!this.countTotalFeedback()) {
-        return 0;
-    }
-    
-    return Number((this.state.good / this.countTotalFeedback() * 100).toFixed(0));
-  }
-    
-  render() {
-    const countTotal = this.countTotalFeedback();
+    const { good, neutral, bad } = this.state;
+    const total = good + neutral + bad;
+    return total;
+  };
 
+  countPositiveFeedbackPercentage = () => {
+    const { good } = this.state;
+    const positivePercentage = (good * 100) / this.countTotalFeedback();
+    return Math.round(positivePercentage);
+  };
+
+  leaveReview = event => {
+    const key = event.target.name;
+
+    this.setState(prevState => ({
+      [key]: prevState[key] + 1,
+    }));
+  };
+
+  render() {
     return (
-      <Section title="Please leave feedback">
-        <FeedbackOptions 
-          options={feedbackName} 
-          onLeaveFeedback={this.handleClick}
-        />
-        {countTotal === 0 && <Notification message="There is no feedback"></Notification>}
-        {countTotal > 0 && 
-          <Statistics 
-            good={this.state.good} 
-            neutral={this.state.neutral} 
-            bad={this.state.bad} 
-            total={this.countTotalFeedback()}
-            positivePercentage={this.countPositiveFeedbackPercentage()} 
+      <Container>
+        <Section>
+          <TitlFeedback />
+          <FeedbackOptions
+            options={['good', 'neutral', 'bad']}
+            onLeaveFeedback={this.leaveReview}
           />
-        }
-      </Section>
-    ) 
+        </Section>
+        <Section>
+          <NameStatistics />
+          {this.countTotalFeedback() !== 0 ? (
+            <Statistics
+              good={this.state.good}
+              neutral={this.state.neutral}
+              bad={this.state.bad}
+              total={this.countTotalFeedback()}
+              positivePercentage={this.countPositiveFeedbackPercentage()}
+            />
+          ) : (
+            <Massage />
+          )}
+        </Section>
+      </Container>
+    );
   }
-};
+}
